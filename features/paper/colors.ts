@@ -1,0 +1,56 @@
+export const PaperTheme = {
+  name: 'paper' as const,
+  background: '#F7F1E8',
+  surface: '#FFFBF5',
+  surfaceElevated: '#FFFFFF',
+  card: '#FFFDF9',
+  border: '#E8DFD0',
+  borderSoft: '#F0E8DA',
+  text: '#2C2416',
+  textSecondary: '#6B5E4E',
+  textTertiary: '#9A8B78',
+  accent: '#8B6914',
+  accentSoft: '#C4A35A',
+  accentMuted: '#EDE4D0',
+  danger: '#B54A3C',
+  dangerSoft: '#F5E0DC',
+  tabBar: '#FFFBF5',
+  tabInactive: '#9A8B78',
+  tabActive: '#8B6914',
+  shadow: 'rgba(44, 36, 22, 0.08)',
+  ink: '#2C2416',
+  cream: '#F7F1E8',
+  highlight: '#F5EBD8',
+};
+
+export const InkTheme = {
+  name: 'ink' as const,
+  background: '#1A1612',
+  surface: '#242018',
+  surfaceElevated: '#2E2820',
+  card: '#2A241C',
+  border: '#3D3428',
+  borderSoft: '#322B22',
+  text: '#F5EDE0',
+  textSecondary: '#C4B5A0',
+  textTertiary: '#8A7B68',
+  accent: '#D4B06A',
+  accentSoft: '#A8893E',
+  accentMuted: '#3D3420',
+  danger: '#E07A6C',
+  dangerSoft: '#3D2420',
+  tabBar: '#242018',
+  tabInactive: '#8A7B68',
+  tabActive: '#D4B06A',
+  shadow: 'rgba(0, 0, 0, 0.35)',
+  ink: '#F5EDE0',
+  cream: '#1A1612',
+  highlight: '#322B22',
+};
+
+export type AppColors = typeof PaperTheme;
+
+export default {
+  light: PaperTheme,
+  dark: InkTheme,
+};

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>下载纸间</title>
+<meta name="description" content="纸间 — 本地优先的中文日记。奶油纸色，软墨字感。" />
+<style>
+  :root {
+    --cream: #F7F1E8;
+    --paper: #FFFBF5;
+    --ink: #2C2416;
+    --ink-soft: #6B5E4E;
+    --ink-faint: #9A8B78;
+    --accent: #8B6914;
+    --accent-soft: #C4A35A;
+    --line: #E8DFD0;
+    --shadow: rgba(44, 36, 22, 0.08);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; min-height: 100%;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(196,163,90,0.12), transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(139,105,20,0.06), transparent 45%),
+      var(--cream);
+    color: var(--ink);
+    font-family: "PingFang SC", "Hiragino Sans GB", "Songti SC", "Noto Serif SC",
+      "Source Han Serif SC", Georgia, serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .sheet { max-width: 560px; margin: 0 auto; padding: 48px 28px 72px; }
+  .seal {
+    display: inline-block; font-size: 13px; letter-spacing: 0.28em; color: var(--accent);
+    border: 1px solid var(--accent-soft); padding: 6px 12px; border-radius: 999px;
+    background: rgba(255,251,245,0.7); margin-bottom: 28px;
+  }
+  h1 {
+    margin: 0 0 8px; font-size: clamp(42px, 10vw, 56px); font-weight: 700;
+    letter-spacing: 0.12em; color: var(--ink);
+    text-shadow: 0 1px 0 rgba(255,255,255,0.85), 0 2px 8px rgba(44,36,22,0.08);
+  }
+  .subtitle {
+    margin: 0 0 36px; font-size: 16px; color: var(--ink-soft);
+    letter-spacing: 0.06em; line-height: 1.7;
+  }
+  .card {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 22px;
+    padding: 28px 24px; box-shadow: 0 10px 40px var(--shadow);
+  }
+  .card p { margin: 0 0 18px; font-size: 15px; line-height: 1.75; color: var(--ink-soft); }
+  .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0 28px; }
+  .meta div { background: #F5EBD8; border-radius: 14px; padding: 14px 16px; }
+  .meta strong {
+    display: block; font-size: 12px; color: var(--ink-faint); font-weight: 500;
+    letter-spacing: 0.08em; margin-bottom: 6px;
+  }
+  .meta span { font-size: 15px; color: var(--ink); font-weight: 600; }
+  .btn {
+    display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+    gap: 4px; width: 100%; padding: 18px 22px; border-radius: 16px; text-decoration: none;
+    color: var(--paper);
+    background: linear-gradient(160deg, #9A7A2A 0%, #8B6914 55%, #6E5210 100%);
+    border: 1px solid rgba(44,36,22,0.18);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 8px 24px rgba(139,105,20,0.28);
+  }
+  .btn .t { font-size: 17px; font-weight: 700; letter-spacing: 0.08em; }
+  .btn small {
+    font-size: 12px; opacity: 0.82; letter-spacing: 0.04em;
+    font-family: ui-sans-serif, system-ui, sans-serif; word-break: break-all;
+  }
+  .note { margin-top: 18px; font-size: 13px; line-height: 1.7; color: var(--ink-faint); }
+  .note code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px;
+    background: #F5EBD8; padding: 1px 6px; border-radius: 6px; color: var(--ink-soft);
+  }
+  .foot {
+    margin-top: 40px; text-align: center; font-size: 13px;
+    color: var(--ink-faint); letter-spacing: 0.12em;
+  }
+</style>
+</head>
+<body>
+  <main class="sheet">
+    <div class="seal">紙間 · ZHIJIAN</div>
+    <h1>纸间</h1>
+    <p class="subtitle">把日子写在纸间。<br/>奶油纸色 · 软墨字感 · 本地优先 · 无账号</p>
+    <section class="card">
+      <p>Android 正式 release 安装包。下载后允许「未知来源」即可安装。数据只保存在你的设备上。</p>
+      <div class="meta">
+        <div><strong>版本</strong><span>1.0.0</span></div>
+        <div><strong>平台</strong><span>Android APK</span></div>
+        <div><strong>存储</strong><span>本机本地</span></div>
+        <div><strong>目标 URL</strong><span>apk.dmxczx.top</span></div>
+      </div>
+      <a class="btn" href="https://apk.dmxczx.top/zhijian-1.0.0.apk" download>
+        <span class="t">下载纸间 APK</span>
+        <small>https://apk.dmxczx.top/zhijian-1.0.0.apk</small>
+      </a>
+      <p class="note">
+        若 CDN 尚未上传：将仓库 <code>dist/zhijian-1.0.0.apk</code> 上传到腾讯云 COS
+        （域名 <code>apk.dmxczx.top</code>）对象键 <code>zhijian-1.0.0.apk</code>，
+        并设为公有读。本机暂无 COS 凭证时请由有权限的同事完成上传。
+      </p>
+    </section>
+    <p class="foot">纸间 · local-first diary</p>
+  </main>
+</body>
+</html>
