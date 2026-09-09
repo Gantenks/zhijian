@@ -10,13 +10,19 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { MoodPicker } from '@/features/diary/components/MoodPicker';
 import { TagChips } from '@/features/diary/components/TagChips';
 import { useDiary } from '@/features/diary/context';
 import { useTheme } from '@/features/paper/ThemeContext';
 import { Mood } from '@/features/diary/types';
-import { toDateKey } from '@/lib/date';
+import { formatFullDate, parseISO, toDateKey } from '@/lib/date';
+
+/** Expand touch target to at least 44pt (HIG). */
+const HIT_44 = { top: 14, bottom: 14, left: 14, right: 14 } as const;
 
 export default function EditEntryScreen() {
   const { id, date: dateParam } = useLocalSearchParams<{ id?: string; date?: string }>();
@@ -34,11 +40,20 @@ export default function EditEntryScreen() {
     existing?.date ?? (typeof dateParam === 'string' ? dateParam : toDateKey(new Date())),
   );
   const [saving, setSaving] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
 
   const canSave = useMemo(
     () => title.trim().length > 0 || body.trim().length > 0,
     [title, body],
   );
+
+  const pickerValue = useMemo(() => {
+    try {
+      return parseISO(date);
+    } catch {
+      return new Date();
+    }
+  }, [date]);
 
   const onSave = async () => {
     if (!canSave || saving) {
@@ -60,16 +75,39 @@ export default function EditEntryScreen() {
     }
   };
 
+  const onDateChange = (event: DateTimePickerEvent, selected?: Date) => {
+    if (Platform.OS === 'android') {
+      setShowPicker(false);
+      if (event.type === 'dismissed') return;
+    }
+    if (selected) {
+      setDate(toDateKey(selected));
+    }
+  };
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: isEdit ? '编辑日记' : '写日记',
       headerLeft: () => (
-        <Pressable onPress={() => router.back()} hitSlop={10}>
+        <Pressable
+          onPress={() => router.back()}
+          hitSlop={HIT_44}
+          accessibilityRole="button"
+          accessibilityLabel="取消"
+          style={styles.headerBtn}
+        >
           <Text style={{ color: colors.textSecondary, fontSize: 16 }}>取消</Text>
         </Pressable>
       ),
       headerRight: () => (
-        <Pressable onPress={onSave} disabled={saving} hitSlop={10}>
+        <Pressable
+          onPress={onSave}
+          disabled={saving}
+          hitSlop={HIT_44}
+          accessibilityRole="button"
+          accessibilityLabel="保存"
+          style={styles.headerBtn}
+        >
           <Text
             style={{
               color: canSave ? colors.accent : colors.textTertiary,
@@ -93,18 +131,41 @@ export default function EditEntryScreen() {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
-        <Text style={[styles.label, { color: colors.textSecondary }]}>日期 (YYYY-MM-DD)</Text>
-        <TextInput
-          value={date}
-          onChangeText={setDate}
-          placeholder="2026-09-10"
-          placeholderTextColor={colors.textTertiary}
-          autoCapitalize="none"
+        <Text style={[styles.label, { color: colors.textSecondary }]}>日期</Text>
+        <Pressable
+          onPress={() => setShowPicker(true)}
+          accessibilityRole="button"
+          accessibilityLabel="选择日期"
           style={[
             styles.input,
-            { color: colors.text, backgroundColor: colors.surface, borderColor: colors.border },
+            styles.dateBtn,
+            { backgroundColor: colors.surface, borderColor: colors.border },
           ]}
-        />
+        >
+          <Text style={{ color: colors.text, fontSize: 16 }}>{formatFullDate(date)}</Text>
+          <Text style={{ color: colors.textTertiary, fontSize: 13 }}>轻触选择</Text>
+        </Pressable>
+
+        {showPicker && (
+          <View style={styles.pickerWrap}>
+            <DateTimePicker
+              value={pickerValue}
+              mode="date"
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+              onChange={onDateChange}
+              locale="zh-CN"
+            />
+            {Platform.OS === 'ios' && (
+              <Pressable
+                onPress={() => setShowPicker(false)}
+                hitSlop={HIT_44}
+                style={[styles.pickerDone, { borderColor: colors.border }]}
+              >
+                <Text style={{ color: colors.accent, fontWeight: '700' }}>完成</Text>
+              </Pressable>
+            )}
+          </View>
+        )}
 
         <Text style={[styles.label, { color: colors.textSecondary }]}>标题</Text>
         <TextInput
@@ -171,14 +232,36 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 16,
   },
+  dateBtn: {
+    minHeight: 48,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   titleInput: { fontSize: 20, fontWeight: '700' },
   bodyInput: { minHeight: 180, lineHeight: 24 },
+  headerBtn: {
+    minWidth: 44,
+    minHeight: 44,
+    justifyContent: 'center',
+    paddingHorizontal: 4,
+  },
+  pickerWrap: { marginBottom: 12 },
+  pickerDone: {
+    alignSelf: 'flex-end',
+    minHeight: 44,
+    minWidth: 64,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
   saveBtn: {
     marginTop: 24,
     borderRadius: 16,
     paddingVertical: 16,
     alignItems: 'center',
     borderWidth: 1,
+    minHeight: 52,
   },
   saveText: { fontSize: 16, fontWeight: '700', letterSpacing: 0.4 },
 });

@@ -42,11 +42,11 @@ export default function CalendarScreen() {
 
         <View style={[styles.cal, { backgroundColor: colors.card, borderColor: colors.borderSoft }]}>
           <View style={styles.monthRow}>
-            <Pressable onPress={() => setMonth((m) => subMonths(m, 1))} hitSlop={12}>
+            <Pressable onPress={() => setMonth((m) => subMonths(m, 1))} hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}>
               <Text style={[styles.nav, { color: colors.accent }]}>‹</Text>
             </Pressable>
             <Text style={[styles.monthTitle, { color: colors.text }]}>{formatMonthTitle(month)}</Text>
-            <Pressable onPress={() => setMonth((m) => addMonths(m, 1))} hitSlop={12}>
+            <Pressable onPress={() => setMonth((m) => addMonths(m, 1))} hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}>
               <Text style={[styles.nav, { color: colors.accent }]}>›</Text>
             </Pressable>
           </View>
