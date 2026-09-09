@@ -90,3 +90,21 @@ RESEARCH.md          # 竞品与设计简报
 ## 许可
 
 Private repository · © Gantenks
+
+
+---
+
+## Android APK
+
+- **公网下载（可用）**：https://github.com/Gantenks/zhijian/releases/download/v1.0.0/zhijian-1.0.0.apk
+- **Release 页**：https://github.com/Gantenks/zhijian/releases/tag/v1.0.0
+- **纸感下载页**：[docs/download.html](./docs/download.html)
+- **本地产物**：`dist/zhijian-1.0.0.apk`（`assembleRelease`）
+- **COS 目标**（待有权限同事上传）：`https://apk.dmxczx.top/zhijian-1.0.0.apk` — 步骤见 [docs/COS_UPLOAD.md](./docs/COS_UPLOAD.md)
+
+本地再打：
+
+```bash
+cd android && ./gradlew assembleRelease
+# 输出：android/app/build/outputs/apk/release/app-release.apk
+```
