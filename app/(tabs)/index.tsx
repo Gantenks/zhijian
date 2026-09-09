@@ -19,15 +19,21 @@ import { useDiary } from '@/features/diary/context';
 import { useTheme } from '@/features/paper/ThemeContext';
 import { DiaryEntry } from '@/features/diary/types';
 
+const DELETE_W = 88;
+
 export default function TimelineScreen() {
   const { colors } = useTheme();
   const { entries, refreshing, refresh, deleteEntry } = useDiary();
   const openRef = useRef<Swipeable | null>(null);
 
   const confirmDelete = useCallback(
-    (id: string) => {
+    (id: string, closer?: Swipeable | null) => {
       Alert.alert('删除日记', '确定要删除这篇日记吗？此操作无法撤销。', [
-        { text: '取消', style: 'cancel' },
+        {
+          text: '取消',
+          style: 'cancel',
+          onPress: () => closer?.close(),
+        },
         {
           text: '删除',
           style: 'destructive',
@@ -39,43 +45,80 @@ export default function TimelineScreen() {
   );
 
   const renderRight = useCallback(
-    (id: string, progress: Animated.AnimatedInterpolation<number>) => {
-      const scale = progress.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0.8, 1],
+    (
+      id: string,
+      progress: Animated.AnimatedInterpolation<number>,
+      dragX: Animated.AnimatedInterpolation<number>,
+      closer: Swipeable | null,
+    ) => {
+      // Keep delete fully off-screen at rest — no red/brown peek strip.
+      const translateX = dragX.interpolate({
+        inputRange: [-DELETE_W, 0],
+        outputRange: [0, DELETE_W],
+        extrapolate: 'clamp',
+      });
+      const opacity = progress.interpolate({
+        inputRange: [0, 0.05, 1],
+        outputRange: [0, 1, 1],
+        extrapolate: 'clamp',
       });
       return (
-        <Pressable
-          onPress={() => confirmDelete(id)}
-          style={[styles.deleteAction, { backgroundColor: colors.danger }]}
+        <Animated.View
+          style={[
+            styles.deleteWrap,
+            { transform: [{ translateX }], opacity },
+          ]}
         >
-          <Animated.Text style={[styles.deleteText, { transform: [{ scale }] }]}>
-            删除
-          </Animated.Text>
-        </Pressable>
+          <Pressable
+            onPress={() => confirmDelete(id, closer)}
+            accessibilityRole="button"
+            accessibilityLabel="删除日记"
+            style={[styles.deleteAction, { backgroundColor: colors.danger }]}
+          >
+            <Text style={styles.deleteText}>删除</Text>
+          </Pressable>
+        </Animated.View>
       );
     },
     [colors.danger, confirmDelete],
   );
 
   const renderItem = useCallback(
-    ({ item }: { item: DiaryEntry }) => (
-      <Swipeable
-        overshootRight={false}
-        onSwipeableWillOpen={() => {
-          if (openRef.current) openRef.current.close();
-        }}
-        ref={(ref) => {
-          // keep last opened
-        }}
-        renderRightActions={(_, progress) => renderRight(item.id, progress)}
-      >
-        <EntryCard
-          entry={item}
-          onPress={() => router.push(`/entry/${item.id}`)}
-        />
-      </Swipeable>
-    ),
+    ({ item }: { item: DiaryEntry }) => {
+      let rowRef: Swipeable | null = null;
+      return (
+        <View style={styles.rowClip}>
+          <Swipeable
+            ref={(ref) => {
+              rowRef = ref;
+            }}
+            overshootRight={false}
+            friction={2}
+            rightThreshold={40}
+            onSwipeableWillOpen={() => {
+              if (openRef.current && openRef.current !== rowRef) {
+                openRef.current.close();
+              }
+              openRef.current = rowRef;
+            }}
+            onSwipeableClose={() => {
+              if (openRef.current === rowRef) openRef.current = null;
+            }}
+            renderRightActions={(progress, dragX) =>
+              renderRight(item.id, progress, dragX, rowRef)
+            }
+          >
+            <EntryCard
+              entry={item}
+              onPress={() => {
+                openRef.current?.close();
+                router.push(`/entry/${item.id}`);
+              }}
+            />
+          </Swipeable>
+        </View>
+      );
+    },
     [renderRight],
   );
 
@@ -95,11 +138,14 @@ export default function TimelineScreen() {
                 onPress={() => router.push('/entry/edit')}
                 accessibilityRole="button"
                 accessibilityLabel="写日记"
+                hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}
                 style={[
                   styles.fab,
                   {
                     backgroundColor: colors.accentMuted,
                     borderColor: colors.accentSoft,
+                    minHeight: 44,
+                    justifyContent: 'center',
                   },
                 ]}
               >
@@ -132,6 +178,11 @@ export default function TimelineScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   list: { paddingHorizontal: 16, paddingBottom: 32 },
+  rowClip: {
+    overflow: 'hidden',
+    borderRadius: 18,
+    marginBottom: 0,
+  },
   fab: {
     paddingHorizontal: 16,
     paddingVertical: 10,
@@ -139,13 +190,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   fabText: { fontWeight: '700', fontSize: 15, letterSpacing: 0.6 },
+  deleteWrap: {
+    width: DELETE_W,
+    marginBottom: 12,
+    marginLeft: 4,
+  },
   deleteAction: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 84,
-    marginBottom: 12,
     borderRadius: 18,
-    marginLeft: 8,
+    minHeight: 72,
   },
   deleteText: { color: '#fff', fontWeight: '700', fontSize: 15 },
 });
