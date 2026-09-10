@@ -110,9 +110,10 @@ export default function EditEntryScreen() {
         >
           <Text
             style={{
-              color: canSave ? colors.accent : colors.textTertiary,
-              fontSize: 16,
-              fontWeight: '700',
+              color: colors.accent,
+              fontSize: 17,
+              fontWeight: '600',
+              opacity: canSave && !saving ? 1 : 0.35,
             }}
           >
             {saving ? '保存中…' : '保存'}
