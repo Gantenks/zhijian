@@ -14,9 +14,9 @@ import { useTheme } from '@/features/paper/ThemeContext';
 import { ThemeMode } from '@/features/diary/types';
 
 const THEMES: { key: ThemeMode; title: string; desc: string }[] = [
-  { key: 'paper', title: '纸感浅色', desc: '奶油底 + 软墨色，默认纸间气质' },
-  { key: 'ink', title: '墨色深色', desc: '深夜书写，降低屏幕刺激' },
-  { key: 'system', title: '跟随系统', desc: '根据系统外观自动切换' },
+  { key: 'ios', title: 'iOS 浅色', desc: '系统大标题 · 分组列表 · 精美默认' },
+  { key: 'ios-dark', title: 'iOS 深色', desc: '深色外观，夜间书写' },
+  { key: 'system', title: '跟随系统', desc: '跟随设备浅色 / 深色' },
 ];
 
 export default function SettingsScreen() {
@@ -47,6 +47,7 @@ export default function SettingsScreen() {
               <Pressable
                 key={t.key}
                 onPress={() => setMode(t.key)}
+                hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
                 style={[
                   styles.row,
                   i < THEMES.length - 1 && {
@@ -103,14 +104,14 @@ export default function SettingsScreen() {
             <View>
               <Text style={[styles.rowTitle, { color: colors.text }]}>纸间</Text>
               <Text style={[styles.rowDesc, { color: colors.textTertiary }]}>
-                版本 1.0.0 · Expo · 本地优先 · 无账号
+                版本 1.1.0 · 默认 iOS 风 · 本地优先 · 无账号
               </Text>
             </View>
           </View>
         </View>
 
         <Text style={[styles.footer, { color: colors.textTertiary }]}>
-          把日子写在纸间。数据只留在你的设备上。
+          数据只留在你的设备上。
         </Text>
       </ScrollView>
     </SafeAreaView>
@@ -124,13 +125,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     marginHorizontal: 24,
     fontSize: 13,
-    fontWeight: '600',
-    letterSpacing: 0.4,
+    fontWeight: '400',
+    letterSpacing: -0.08,
   },
   card: {
     marginHorizontal: 16,
-    borderRadius: 18,
-    borderWidth: 1,
+    borderRadius: 10,
+    borderWidth: StyleSheet.hairlineWidth,
     overflow: 'hidden',
     marginBottom: 8,
   },
@@ -139,8 +140,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 14,
+    minHeight: 44,
   },
-  rowTitle: { fontSize: 16, fontWeight: '600' },
+  rowTitle: { fontSize: 17, fontWeight: '400', letterSpacing: -0.4 },
   rowDesc: { fontSize: 13, marginTop: 3, lineHeight: 18 },
   radio: {
     width: 22,

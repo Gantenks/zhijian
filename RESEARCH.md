@@ -137,3 +137,29 @@
 ## 结论
 
 Day One 与 Apple Journal 定义了「高级而安静」的日记体验；Daylio / Flomo 证明低摩擦录入与标签的价值；Diarly 强调数据主权。纸间站在这些交汇点上：**纸感视觉 + iOS 导航骨架 + 本地心情日记**，用克制功能换取每天愿意打开的温度。
+
+---
+
+## 用上 / 未用对照表（发版勾选 · 2026-09-10）
+
+> 工程发版前对着勾；**未用上的不得写进交付话术**。默认皮肤已改为 **精美 iOS**（`features/ios`），纸感冻结。
+
+| 调研结论 | 来源产品 | 状态 | 落地位置 |
+|----------|----------|------|----------|
+| 底部 Tab + Large Title | Apple Journal / Day One | ✅ 用上 | `app/(tabs)` + `LargeTitle` |
+| 时间线卡片流 | Day One | ✅ 用上 | `app/(tabs)/index.tsx` |
+| 五档 mood 快选 | Daylio | ✅ 用上 | `MoodPicker` |
+| 标签 + 搜索筛选 | Flomo / Diarium | ✅ 用上 | `TagChips` + `search` |
+| 日历按日浏览 | Day One / Diarium | ✅ 用上 | `calendar.tsx` |
+| 左滑删除 + 确认 | iOS 列表惯例 | ✅ 用上 | Swipeable（静止态不漏条） |
+| 本地优先无账号 | Diarly | ✅ 用上 | AsyncStorage |
+| 系统蓝 / 分组灰底 / 细分割线 | iOS HIG | ✅ 用上（默认） | `features/ios/colors.ts` |
+| 奶油纸感 / 压印标题 | 原纸间简报 | ⏸ 冻结 | `features/paper` 保留可选，默认不进 |
+| On This Day 回顾 | Day One | ❌ 未用 | — |
+| 富媒体（图/音/视频） | Day One | ❌ 未用 | v1 非目标 |
+| 地图本 | Journey | ❌ 未用 | — |
+| AI 对话引导 | Reflectly | ❌ 未用（刻意） | — |
+| 网格问题日记 | Grid Diary | ❌ 未用 | 仅空状态轻提示可后续 |
+| 云同步 / 订阅 | 多数产品 | ❌ 未用 | — |
+
+**一句话交付口径（可对外）：** 精美 iOS 风本地日记——时间线 / 日历 / 搜索 / 心情标签 / 本地存储；无账号、无 AI、无云同步。

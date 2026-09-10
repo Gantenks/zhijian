@@ -1,6 +1,6 @@
 export type Mood = 'great' | 'good' | 'okay' | 'low' | 'bad';
 
-export type ThemeMode = 'paper' | 'ink' | 'system';
+export type ThemeMode = 'ios' | 'ios-dark' | 'system' | 'paper' | 'ink';
 
 export interface DiaryEntry {
   id: string;

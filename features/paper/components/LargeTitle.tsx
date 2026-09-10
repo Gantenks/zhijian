@@ -9,19 +9,16 @@ type Props = {
 };
 
 export function LargeTitle({ title, subtitle, right }: Props) {
-  const { colors, isDark } = useTheme();
+  const { colors, skin } = useTheme();
+  const ios = skin === 'ios';
   return (
     <View style={styles.wrap}>
       <View style={{ flex: 1, paddingRight: right ? 12 : 0 }}>
         <Text
           style={[
             styles.title,
-            {
-              color: colors.text,
-              textShadowColor: isDark ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.95)',
-              textShadowOffset: { width: 0, height: 1 },
-              textShadowRadius: isDark ? 3 : 0.5,
-            },
+            ios ? styles.titleIos : styles.titlePaper,
+            { color: colors.text },
           ]}
           numberOfLines={1}
         >
@@ -45,18 +42,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingTop: 8,
-    paddingBottom: 16,
+    paddingBottom: 12,
   },
-  title: {
-    fontSize: 34,
-    fontWeight: '800',
-    letterSpacing: 1.4,
-  },
+  title: { fontSize: 34 },
+  titleIos: { fontWeight: '700', letterSpacing: 0.35 },
+  titlePaper: { fontWeight: '800', letterSpacing: 1.4 },
   subtitle: {
-    fontSize: 14,
+    fontSize: 13,
     marginTop: 4,
-    fontWeight: '500',
-    letterSpacing: 0.3,
-    lineHeight: 20,
+    fontWeight: '400',
+    letterSpacing: -0.08,
+    lineHeight: 18,
   },
 });
